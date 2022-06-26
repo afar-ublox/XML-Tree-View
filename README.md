@@ -1,6 +1,24 @@
 # treeview
 
-This template should help get you started developing with Vue 3 in Vite.
+This application generate view with respect to selected file
+
+## STATUS
+
+This application requires Node js to run.
+- [x] Setup & Interface
+    - [x] Setup Node Enviroment
+    - [x] Setting up Typescript
+    - [x] Setting up Tailwind
+    - [x] Setting up baseUI
+    - [x] Setting up Tree View
+- [x] Data Handling
+    - [x] Upload XML FILE (within browser)
+    - [x] Convert XML to JSON
+    - [x] Convert JSON to TREE VIEW
+- [ ] Impliment Operations
+    - [ ] On Click Trigger
+    - [ ] Parse JSON for secondary view
+    - [ ] Convert JSON To tree view for secondary view.
 
 ## Recommended IDE Setup
 
