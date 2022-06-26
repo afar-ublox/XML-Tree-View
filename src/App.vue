@@ -1,8 +1,11 @@
 <template>
   <TopBar />
   <main class="bg-slate-100 dark:bg-slate-500">
-    <div class="container mx-auto bg-slate-300 dark:bg-slate-900">
+    <div class="container-fluid px-4 mx-auto bg-slate-100 dark:bg-slate-500 text-black dark:text-white py-2 border-black border-b dark:border-white">
       <input type="file" id="fileForUpload" v-on:change="readFile" />
+    </div>
+      
+    <div class="container mx-auto bg-slate-100 dark:bg-slate-500">
       <div class="grid grid-cols-2 min-h-screen">
         <div class="w-full border-black border-r dark:border-white py-2 px-4">
           <TreeView :treeData="treeOneData" />
