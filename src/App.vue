@@ -1,10 +1,12 @@
 <template>
   <TopBar />
   <main class="bg-slate-100 dark:bg-slate-500">
-    <div class="container-fluid px-4 mx-auto bg-slate-100 dark:bg-slate-500 text-black dark:text-white py-2 border-black border-b dark:border-white">
+    <div
+      class="container-fluid px-4 mx-auto bg-slate-100 dark:bg-slate-500 text-black dark:text-white py-2 border-black border-b dark:border-white"
+    >
       <input type="file" id="fileForUpload" v-on:change="readFile" />
     </div>
-      
+
     <div class="container mx-auto bg-slate-100 dark:bg-slate-500">
       <div class="grid grid-cols-2 min-h-screen">
         <div class="w-full border-black border-r dark:border-white py-2 px-4">
@@ -31,58 +33,67 @@ export default {
       xmlData: "",
       textData: "",
       jsonData: {},
-      treeOneData:{}
+      treeOneData: {},
     };
   },
   methods: {
-    parseToTrer(jsonData){
-      let cloneforthis = this;
-      let returnData = {};
-      for (var key in jsonData) {
-          // skip loop if the property is from prototype
-          if (!jsonData.hasOwnProperty(key)) continue;
+    parseToTrer(jsonData) {
+      const cloneforthis = this;
+      const returnData = {};
+      for (const key in jsonData) {
+        // skip loop if the property is from prototype
+        if (!jsonData.hasOwnProperty(key)) continue;
 
-          var obj = jsonData[key];
-          if(typeof obj  === 'object' || Array.isArray(obj)){
-            returnData[key] = this.parseToTrer(obj)
-          }else{
-            returnData[key] = obj
-          }
+        const obj = jsonData[key];
+        if (typeof obj === "object" || Array.isArray(obj)) {
+          returnData[key] = this.parseToTrer(obj);
+        } else {
+          returnData[key] = obj;
+        }
       }
       return returnData;
     },
-    parseToTree(jsonData){
-      let cloneforthis = this;
-      let returnData = [];
-      for (var key in jsonData) {
-          // skip loop if the property is from prototype
-          if (!jsonData.hasOwnProperty(key)) continue;
+    parseToTree(jsonData) {
+      const cloneforthis = this;
+      const returnData = [];
 
-          var obj = jsonData[key];
-          if(typeof obj  === 'object' || Array.isArray(obj)){
-            
+
+      for (const key in jsonData) {
+        // skip loop if the property is from prototype
+        if (!jsonData.hasOwnProperty(key)) continue;
+
+        const obj = jsonData[key];
+        if (typeof obj === "object" || Array.isArray(obj)) {
+          if(typeof obj === "object"){
             returnData.push({
-              text: key,
-              state: {checked: false, selected: false, expanded: false },
-              nodes:  this.parseToTree(obj)
-            })
+              text: obj.name,
+              state: { checked: false, selected: false, expanded: false },
+              nodes: this.parseToTree(obj.children),
+            });
           }else{
-            returnData.push({
-              text: obj,
-              state: {checked: false, selected: false, expanded: false }
-            })
+            // returnData.push({
+            //   text: key,
+            //   state: { checked: false, selected: false, expanded: false },
+            //   nodes: this.parseToTree(obj),
+            // });
           }
+        } else {
+          returnData.push({
+            text: obj +'-'+ key,
+            state: { checked: false, selected: false, expanded: false },
+          });
+        }
       }
       return returnData;
     },
     parseTextToXML() {
-      let xmlData = this.parseXml(this.textData);
-      this.xmlData = xmlData
+      const xmlData = this.parseXml(this.textData);
+      this.xmlData = xmlData;
       // console.log(this.xmlData);
-      this.jsonData = this.xml2json(this.xmlData,"");
-      let treeDataArray = this.parseToTree(this.jsonData);
+      this.jsonData = this.xml2json(this.xmlData, "");
+      const treeDataArray = this.parseToTree(this.jsonData);
       this.treeOneData = treeDataArray;
-      console.log(this.treeOneData)
+      console.log(this.treeOneData);
     },
     parseXml(xml) {
       let dom = null;
@@ -196,7 +207,7 @@ export default {
           } else if (typeof o == "string")
             json += (name && ":") + '"' + o.toString() + '"';
           else json += (name && ":") + o.toString();
-          
+
           return json;
         },
         innerXml: function (node) {
@@ -262,9 +273,9 @@ export default {
       const json = X.toJson(X.toObj(X.removeWhite(xml)), xml.nodeName, "\t");
       return JSON.parse(
         "{\n" +
-        tab +
-        (tab ? json.replace(/\t/g, tab) : json.replace(/\t|\n/g, "")) +
-        "\n}"
+          tab +
+          (tab ? json.replace(/\t/g, tab) : json.replace(/\t|\n/g, "")) +
+          "\n}"
       );
     },
     readFile() {
@@ -275,7 +286,9 @@ export default {
         reader.readAsText(file, "UTF-8");
         reader.onload = function (evt) {
           cloneForThis.textData = evt.target.result;
-          cloneForThis.parseTextToXML();
+          cloneForThis.textData = JSON.parse(cloneForThis.textData)
+          let treeDataArray = cloneForThis.parseToTree(cloneForThis.textData);
+          cloneForThis.treeOneData = treeDataArray;
         };
         reader.onerror = function (evt) {
           console.log(evt);
